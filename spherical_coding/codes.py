@@ -1,9 +1,13 @@
+from __future__ import print_function
+from __future__ import absolute_import
 import numpy as np
 import random
 from numpy import array, zeros, copy
 from math import *
 import sys
 from time import time
+
+from six.moves import range
 
 Tlim = 1000
 Sample = 1000
@@ -45,7 +49,7 @@ def good_pair():
 def random_sparse_code(c, s=6):
     M = zeros((c, n), dtype=np.int64)
     for v in M:
-        for rep in xrange(s):
+        for rep in range(s):
             while True:
                 a = random.randint(0, n-1)
                 if v[a]==0:
@@ -60,7 +64,7 @@ def mesure_XPC_quality(M, S=Sample):
     l = len(M)
     hist_good = zeros(l+1, dtype=np.int64)
     hist_bad = zeros(l+1, dtype=np.int64)
-    for a in xrange(S):
+    for a in range(S):
         v, w = random_pair()
         x = sum(compress(M, v) ^ compress(M, w))
         hist_bad[x] += 1
@@ -92,14 +96,14 @@ def score(G):
 def update_G(M, G, i):
     l, n = M.shape
     v = M.dot(M[i].transpose())
-    for j in xrange(l):
+    for j in range(l):
         G[i, j] = v[j]
         G[j, i] = v[j]
 
 
 def perm(n):
     L = range(n)
-    for rep in xrange(2 * n):
+    for rep in range(2 * n):
         a = random.randint(0, n-1)
         b = random.randint(0, n-1)
         L[a], L[b] = L[b], L[a]
@@ -146,16 +150,16 @@ def improve(M):
             else:
                 c += 1
         else:
-            print "no improvement found"
+            print("no improvement found")
             break
     G = M.dot(M.transpose())
-    print "n:", n , "iter:", a, " \t" , 1.*score0, "\t ->", 1.*score(G)
+    print("n:", n , "iter:", a, " \t" , 1.*score0, "\t ->", 1.*score(G))
     return M
 
 
 def get_good_code(s=6):
     M = random_sparse_code(XPC_bitlen, s=s)
-    # print mesure_XPC_quality(M)
+    # print(mesure_XPC_quality(M))
     improve(M)
     return M
 
@@ -175,8 +179,8 @@ f = open("sc_%d_%s.def"%(n, XPC_bitlen_string), 'w')
 
 for v in M:
     for x in sparse_repr(v):
-        print >>f, x,
-    print >>f
+        print(x, file=f, end=' ')
+    print('', file=f)
 
 f.close()
 
@@ -185,6 +189,6 @@ f.close()
 
 # b, g = mesure_XPC_quality(M)
 # for i in range(XPC_bitlen):
-#     print >>f, "%d \t %d \t %d"%(i, b[i], g[i])
+#     print("%d \t %d \t %d"%(i, b[i], g[i]), file=f)
 
 # f.close()

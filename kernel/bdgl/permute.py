@@ -1,7 +1,12 @@
+from __future__ import absolute_import
+from __future__ import print_function
 from numpy import array, zeros
-from hadamard import hadamard32_mat 
+from .hadamard import hadamard32_mat 
 from numpy.random import randint
 import sys
+
+import six
+long = six.integer_types[-1]
 
 N = int(sys.argv[1])
 
@@ -91,7 +96,7 @@ def generate_mixsequence(seqlen, trials, filename=None):
 			mixmask = randint(2, size=32)
 			w = m256_permute_epi16_2f(v, mixmask)
 			s = - score(extract_vec(w), D)
-			# print s, 
+			# print(s, end=' ')
 			best = max(best, (s, 1*w, mixmask))
 
 		(s, w, mixmask) = best
@@ -102,8 +107,8 @@ def generate_mixsequence(seqlen, trials, filename=None):
 		D.append(extract_vec(v))
 		if filename is not None:
 			for x in mixmask:
-				print >>filee, x,
-			print >>filee, ""
+				print(x, file=filee, end=' ')
+			print("", file=filee)
 	
 	return scores
 
@@ -112,10 +117,10 @@ generate_mixsequence(256, 16, "mix_sequence_%d.dat"%N)
 
 # M = []
 # for trials in [1,2,4,8,16,32,64,128,256]:
-# 	print "%4d :"%trials,
+# 	print("%4d :"%trials, end=' ')
 # 	L = generate_mixsequence(100, trials)
 # 	for x in L[::5]:
-# 		print "%.4e "%x,
-# 	print
+# 		print("%.4e "%x, end=' ')
+# 	print()
 
-# print array(M)
+# print(array(M))

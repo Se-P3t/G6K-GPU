@@ -75,9 +75,7 @@ cdef class Siever(object):
                 raise ValueError("Siever requires UinvT enabled")
 
         elif isinstance(M, IntegerMatrix):
-            if M.nrows >= 170:
-                float_type = "qd"
-            elif M.nrows >= 160:
+            if M.nrows >= 160:
                 float_type = "qd"
             else:
                 float_type = "long double"
@@ -1305,8 +1303,8 @@ cdef class Siever(object):
             hash_start = self.l-k
              
             mu = zeros((k, k), dtype='float64')
-            for i in xrange(hash_start,self.l):
-                for j in xrange(hash_start,i+1):
+            for i in range(hash_start,self.l):
+                for j in range(hash_start,i+1):
                     mu[i-hash_start, j-hash_start] = self.M.get_r(i,j) / self.M.r()[j]**0.5
             muinv = inv(mu)
             
@@ -1317,7 +1315,7 @@ cdef class Siever(object):
             if dual_vecs_yr.shape[0] == 0:
                 dual_vecs_yr = npp.zeros((dual_hash_vecs, k), dtype='float32')
                 print 'no dual vecs??', E.enumerate(hash_start, self.l, 100000000000000000.0, 0, dual=True)
-                for i in xrange(0, dual_hash_vecs, k):
+                for i in range(0, dual_hash_vecs, k):
                     if i + k <= dual_hash_vecs:
                         dual_vecs_yr[i:i+k] = muinv.transpose()
                     else:
@@ -1327,19 +1325,19 @@ cdef class Siever(object):
             if cond(dual_vecs_yr[:dual_hash_vecs], 2) > 100:
                 dual_vecs_yr[(dual_hash_vecs-k):dual_hash_vecs] = muinv.transpose()
 
-            for i in xrange(dual_hash_vecs):
-                for j in xrange(k):
+            for i in range(dual_hash_vecs):
+                for j in range(k):
                     dual_vecs[i,j] = dual_vecs_yr[i][j]
 
             # greedy improvement
             if dual_hash_vecs_construct > dual_hash_vecs:
-                for t in xrange(3):
+                for t in range(3):
                     sub = npp.copy(dual_vecs)
-                    for i in xrange(dual_vecs_yr.shape[0]):
+                    for i in range(dual_vecs_yr.shape[0]):
                         g = sub.transpose().dot(sub)
                         cnd = npp.trace(g)/k/npp.exp(npp.linalg.slogdet(g)[1]/k)
                         bestj = -1
-                        for j in xrange(dual_vecs.shape[0]):
+                        for j in range(dual_vecs.shape[0]):
                             tmp = npp.copy(sub)
                             tmp[j] = dual_vecs_yr[i]
                             gram = tmp.transpose().dot(tmp)
@@ -1362,8 +1360,8 @@ cdef class Siever(object):
             if( length_bound > 0 ):
                 conv_ratio = npp.trace(gram) / dual_hash_d4f
         
-        for i in xrange(dual_hash_vecs):
-            for j in xrange(k):
+        for i in range(dual_hash_vecs):
+            for j in range(k):
                 dual_vecs[i,j] = dual_vecs[i,j] * self.M.r()[hash_start+j]**0.5
 
         sig_on()
@@ -1388,7 +1386,7 @@ cdef class Siever(object):
         sig_off()
 
         res = zeros((N,2), dtype='float32')
-        for i in xrange(N):
+        for i in range(N):
             res[i,0] = liftlen[i]
             res[i,1] = hashlen[i]
         return res

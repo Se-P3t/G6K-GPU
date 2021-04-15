@@ -4,6 +4,8 @@
 SVP Challenge Solver Command Line Client
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
 import copy
 import logging
 import pickle as pickler
@@ -18,6 +20,9 @@ from g6k.utils.stats import SieveTreeTracer
 from g6k.utils.util import load_svpchallenge_and_randomize, load_matrix_file, db_stats
 from fpylll import BKZ as BKZ_FPYLLL
 from fpylll.tools.bkz_stats import dummy_tracer
+
+import six
+from six.moves import range
 
 def asvp_kernel(arg0, params=None, seed=None):
     logger = logging.getLogger('asvp')
@@ -107,7 +112,7 @@ def asvp():
                                   workout__dim4free_dec=2,
                                   trace=True)
 
-    stats = run_all(asvp_kernel, all_params.values(),
+    stats = run_all(asvp_kernel, list(all_params.values()),
                     lower_bound=args.lower_bound,
                     upper_bound=args.upper_bound,
                     step_size=args.step_size,
@@ -115,7 +120,7 @@ def asvp():
                     workers=args.workers,
                     seed=args.seed)
 
-    inverse_all_params = OrderedDict([(v, k) for (k, v) in all_params.iteritems()])
+    inverse_all_params = OrderedDict([(v, k) for (k, v) in six.iteritems(all_params)])
 
     for (n, params) in stats:
         stat = stats[(n, params)]

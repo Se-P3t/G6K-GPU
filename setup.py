@@ -1,8 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from distutils.core import setup
-from distutils.extension import Extension
+from __future__ import absolute_import
+try:
+    from setuptools import setup
+    from setuptools.extension import Extension
+except ImportError:
+    from distutils.core import setup
+    from distutils.extension import Extension
 from Cython.Build import cythonize
 
 import numpy
@@ -14,7 +19,10 @@ import numpy  # noqa
 subprocess.check_call("make -C kernel",shell=True)
 
 # read actual values of all build variables from kernel/Makefile
-makefile_defs = subprocess.check_output("make -C kernel printvariables | grep '='", shell=True).splitlines()
+makefile_defs = subprocess.check_output("make -C kernel printvariables | grep '='", shell=True)
+if bytes is not str:
+    makefile_defs = makefile_defs.decode()
+makefile_defs = makefile_defs.splitlines()
 
 def read_from_makefile(field):
     global makefile_defs

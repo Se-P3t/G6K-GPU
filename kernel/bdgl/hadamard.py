@@ -1,6 +1,9 @@
 from numpy import array, zeros
 from numpy.linalg import inv
 
+import six
+long = six.integer_types[-1]
+
 def _mm256_hadd_epi16(a, b):
 	dst = zeros(16, dtype=long)
 	dst[0::8] = a[0::8] + a[1::8] 

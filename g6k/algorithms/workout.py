@@ -2,10 +2,13 @@
 """
 
 """
+from __future__ import absolute_import
+from __future__ import print_function
 import sys
-from pump import pump
+from .pump import pump
 from fpylll.util import gaussian_heuristic
 import time
+from six.moves import range
 
 
 def workout(g6k, tracer, kappa, blocksize, dim4free_min=0,              # Main parameters
