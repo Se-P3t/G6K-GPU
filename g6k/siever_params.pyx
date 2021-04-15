@@ -178,6 +178,9 @@ cdef class SieverParams(object):
         if self._read_only:
             raise ValueError("This object is read only, create a copy to edit.")
 
+        if isinstance(value, str):
+            value = value.encode("utf-8")
+
         if key == "reserved_n":
             self._core.reserved_n = value
         elif key == "reserved_db_size":
@@ -582,7 +585,7 @@ cdef class SieverParams(object):
         return hash(tuple(self.iteritems()))
 
     def __eq__(self, SieverParams other):
-        return tuple(self.iteritems()) == tuple(self.iteritems())
+        return tuple(self.iteritems()) == tuple(other.iteritems())
 
 def unpickle_params(cls, *d):
     return cls(**dict(d))
