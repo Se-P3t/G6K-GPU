@@ -178,9 +178,6 @@ cdef class SieverParams(object):
         if self._read_only:
             raise ValueError("This object is read only, create a copy to edit.")
 
-        if isinstance(value, str):
-            value = value.encode("utf-8")
-
         if key == "reserved_n":
             self._core.reserved_n = value
         elif key == "reserved_db_size":
@@ -210,7 +207,7 @@ cdef class SieverParams(object):
         elif key == "bgj1_transaction_bulk_size":
             self._core.bgj1_transaction_bulk_size = value
         elif key == "simhash_codes_basedir":
-            self._core.simhash_codes_basedir = value
+            self._core.simhash_codes_basedir = value.encode("utf-8") if isinstance(value, str) else value
         elif key == "gpus":
             self._core.gpus = value
         elif key == "streams_per_thread":
@@ -230,7 +227,7 @@ cdef class SieverParams(object):
         elif key == "bdgl_bucket_size":
             self._core.bdgl_bucket_size = value
         elif key == "gpu_bucketer":
-            self._core.gpu_bucketer = value
+            self._core.gpu_bucketer = value.encode("utf-8") if isinstance(value, str) else value
         elif key == "gpu_triple":
             self._core.gpu_triple = value
         else:
