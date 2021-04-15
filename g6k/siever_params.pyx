@@ -561,7 +561,7 @@ cdef class SieverParams(object):
             SieverParams({})
 
         """
-        return (unpickle_params, (self.__class__,) + tuple(self.dict().iteritems()))
+        return (unpickle_params, (self.__class__,) + tuple(self.dict().items()))
 
     @property
     def read_only(self):
