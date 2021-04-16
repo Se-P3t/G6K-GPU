@@ -1,0 +1,19 @@
+# Compiled source #
+###################
+*.pyc
+*.o
+*.so
+
+# Specific Files #
+##################
+
+/g6k/siever.cpp
+/g6k/siever_params.cpp
+/svpchallenge/*
+/g6k-fplll
+/g6k-fpylll
+/g6k-env
+/activate
+/build/
+/dist/
+/G6K.egg-info/
